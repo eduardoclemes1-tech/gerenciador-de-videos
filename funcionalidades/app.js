@@ -11,7 +11,6 @@ import { mediaDB } from './indexed-db.js';
 // --- ESTADO DA APLICAÇÃO ---
 let currentUser = null;
 let appData = []; // Lista de projetos carregados na memória
-let isGuest = false;
 
 // --- ELEMENTOS DO DOM (INTERFACE) ---
 const loginScreen = document.getElementById('login-screen');
@@ -77,7 +76,8 @@ btnLogout.addEventListener('click', async () => {
     toggleLoading(true, 'Saindo...');
     try {
         // AUDITORIA: Verifica se é visitante para limpar a sessão correta
-        if (isGuest) {
+        // Usa currentUser.isGuest para maior robustez
+        if (currentUser && currentUser.isGuest) {
             localStorage.removeItem('guest_session');
             showLoginScreen();
         } else {
@@ -96,11 +96,9 @@ function setupSession(user, guestMode) {
     
     // AUDITORIA: ROBUSTEZ DA SESSÃO
     // Garante que o objeto currentUser tenha explicitamente a propriedade isGuest.
-    // Isso evita verificações de undefined em outras partes do código.
+    // Isso evita verificações de undefined e garante que o objeto carregue seu próprio estado.
+    // Se guestMode for undefined/null, vira false.
     currentUser.isGuest = !!guestMode;
-    
-    // Mantemos a variável global para compatibilidade interna
-    isGuest = guestMode;
     
     // Atualiza nome no cabeçalho
     document.getElementById('user-display-name').textContent = user.displayName;
@@ -114,7 +112,6 @@ function setupSession(user, guestMode) {
 
 function showLoginScreen() {
     currentUser = null;
-    isGuest = false;
     appData = [];
     loginScreen.classList.remove('hidden');
     appContent.classList.add('hidden');
@@ -126,11 +123,11 @@ async function loadContent() {
     contentGrid.innerHTML = '<p style="color:gray; grid-column:1/-1; text-align:center;">Carregando seus projetos...</p>';
     
     try {
-        // AUDITORIA: Carregamento Híbrido
-        if (isGuest) {
+        // AUDITORIA: Carregamento Híbrido baseado no objeto currentUser
+        if (currentUser && currentUser.isGuest) {
             const localData = localStorage.getItem('guest_content');
             appData = localData ? JSON.parse(localData) : [];
-        } else {
+        } else if (currentUser) {
             appData = await firestore.loadUserContent(currentUser.uid);
         }
 
@@ -146,8 +143,10 @@ async function loadContent() {
 
 async function saveContent() {
     try {
+        if (!currentUser) return false;
+
         // AUDITORIA: Persistência Híbrida confirmada
-        if (isGuest) {
+        if (currentUser.isGuest) {
             // Modo Visitante: Salva no LocalStorage
             localStorage.setItem('guest_content', JSON.stringify(appData));
         } else {
