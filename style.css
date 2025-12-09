@@ -1,0 +1,236 @@
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Variáveis de Cores (Tema Escuro estilo VS Code) */
+:root {
+    --bg-color: #1e1e1e;
+    --card-bg: #252526;
+    --text-primary: #d4d4d4;
+    --text-secondary: #9cdcfe;
+    --accent: #007acc;
+    --accent-hover: #0062a3;
+    --danger: #f44336;
+    --border: #3c3c3c;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Classes Utilitárias */
+.hidden { display: none !important; }
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-primary { background-color: var(--accent); color: white; }
+.btn-primary:hover { background-color: var(--accent-hover); }
+.btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text-primary); }
+.btn-text { background: none; color: var(--text-primary); }
+.btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+.btn-outline { border: 1px solid var(--border); background: transparent; color: var(--text-primary); }
+
+/* Tela de Login */
+.screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#login-screen {
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background-color: var(--card-bg);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.login-card h1 { margin-bottom: 10px; color: white; }
+.login-card p { margin-bottom: 30px; color: #888; }
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Cabeçalho do App */
+.app-header {
+    height: 60px;
+    background-color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo { font-size: 1.2rem; font-weight: bold; }
+.user-info { display: flex; gap: 15px; align-items: center; }
+
+/* Grid de Conteúdo */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+
+.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+.card-media {
+    height: 180px;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.card-media img, .card-media video { width: 100%; height: 100%; object-fit: cover; }
+.card-body { padding: 15px; flex: 1; }
+.card-title { font-size: 1.1rem; margin-bottom: 5px; color: white; font-weight: bold; }
+.card-desc { font-size: 0.9rem; color: #aaa; margin-bottom: 15px; line-height: 1.4; }
+.card-footer { 
+    margin-top: auto; 
+    padding-top: 10px; 
+    border-top: 1px solid var(--border); 
+    display: flex; 
+    justify-content: space-between; /* Data à esquerda, botão à direita */
+    align-items: center;
+    gap: 10px;
+}
+.card-date { font-size: 0.75rem; color: #666; }
+
+/* FAB (Botão Flutuante) */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    color: white;
+    font-size: 24px;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+.fab:hover { background-color: var(--accent-hover); transform: scale(1.1); }
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.modal-content h2 { margin-bottom: 15px; color: white; }
+
+.modal-content input[type="text"], 
+.modal-content textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: #3c3c3c;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 4px;
+    outline: none;
+}
+.modal-content input:focus, .modal-content textarea:focus { border-color: var(--accent); }
+.file-area { margin: 15px 0; border: 1px dashed #555; padding: 15px; border-radius: 4px; text-align: center; }
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.spinner {
+    width: 40px; height: 40px;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Toast Notification */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    pointer-events: none;
+}
+.toast {
+    background: #323232;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s, fadeOut 0.3s 2.7s forwards;
+    pointer-events: auto;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }

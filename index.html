@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Content Organizer</title>
+    <!-- Importa o arquivo de estilos separado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- OVERLAY DE CARREGAMENTO (Novo) -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <div id="loading-text">Processando...</div>
+    </div>
+
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="screen">
+        <div class="login-card">
+            <h1>Video Organizer</h1>
+            <p>Gerencie seus projetos de vídeo com segurança.</p>
+            
+            <div class="button-group">
+                <!-- Botão para simular login com Google -->
+                <button id="btn-login-google" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 18 18" style="margin-right:8px; background:white; border-radius:50%;">
+                        <path d="M17.64 9.2c0-.637-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"></path>
+                        <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.715H3.959v2.309A8.997 8.997 0 0 0 9 18z" fill="#34A853"></path>
+                        <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.981H.948A8.991 8.991 0 0 0 0 9c0 1.452.348 2.827.948 4.019l3.016-2.309z" fill="#FBBC05"></path>
+                        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .948 4.981L3.964 7.32C4.671 5.188 6.656 3.58 9 3.58z" fill="#EA4335"></path>
+                    </svg>
+                    Entrar com Google
+                </button>
+                
+                <!-- Botão para modo visitante -->
+                <button id="btn-guest" class="btn btn-secondary">Continuar como Visitante</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DO APP (Inicialmente oculto) -->
+    <div id="app-content" class="screen hidden">
+        <header class="app-header">
+            <div class="logo">🎬 Meus Vídeos</div>
+            <div class="user-info">
+                <span id="user-display-name">Usuário</span>
+                <button id="btn-logout" class="btn btn-sm btn-outline">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Área de notificações (Toasts) -->
+            <div id="toast-container"></div>
+
+            <!-- Grade de Cards de Vídeo -->
+            <div id="content-grid" class="grid">
+                <!-- Os cards serão inseridos aqui via JavaScript -->
+            </div>
+        </main>
+
+        <!-- Botão Flutuante para Adicionar Novo -->
+        <button id="btn-add-new" class="fab" title="Novo Projeto">+</button>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO -->
+    <div id="modal-editor" class="modal hidden">
+        <div class="modal-content">
+            <h2>Editar Projeto</h2>
+            <input type="text" id="input-title" placeholder="Título do Vídeo" autocomplete="off">
+            <textarea id="input-desc" placeholder="Descrição ou Roteiro" rows="4"></textarea>
+            
+            <div class="file-area">
+                <label style="display:block; margin-bottom:5px;">Anexar Mídia (Máx 50MB):</label>
+                <input type="file" id="input-file" accept="image/*,video/*">
+                <div id="preview-area" style="margin-top:10px; color:#aaa; font-size:0.9rem;"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="btn-cancel-edit" class="btn btn-text">Cancelar</button>
+                <button id="btn-save-edit" class="btn btn-primary">Salvar Projeto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Importando o script principal como Módulo -->
+    <script type="module" src="./funcionalidades/app.js"></script>
+</body>
+</html>
