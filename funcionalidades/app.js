@@ -49,6 +49,7 @@ auth.onAuthStateChanged((user) => {
 btnLoginGoogle.addEventListener('click', async () => {
     toggleLoading(true, 'Conectando ao Google...');
     try {
+        // O Mock já simula a persistência interna via localStorage
         await auth.signInWithGoogle();
         // O onAuthStateChanged vai lidar com a mudança de tela automaticamente
     } catch (error) {
@@ -75,6 +76,7 @@ btnLogout.addEventListener('click', async () => {
 
     toggleLoading(true, 'Saindo...');
     try {
+        // AUDITORIA: Verifica se é visitante para limpar a sessão correta
         if (isGuest) {
             localStorage.removeItem('guest_session');
             showLoginScreen();
@@ -91,6 +93,13 @@ btnLogout.addEventListener('click', async () => {
 // Configura a sessão e carrega dados
 function setupSession(user, guestMode) {
     currentUser = user;
+    
+    // AUDITORIA: ROBUSTEZ DA SESSÃO
+    // Garante que o objeto currentUser tenha explicitamente a propriedade isGuest.
+    // Isso evita verificações de undefined em outras partes do código.
+    currentUser.isGuest = !!guestMode;
+    
+    // Mantemos a variável global para compatibilidade interna
     isGuest = guestMode;
     
     // Atualiza nome no cabeçalho
@@ -111,12 +120,13 @@ function showLoginScreen() {
     appContent.classList.add('hidden');
 }
 
-// --- 2. GERENCIAMENTO DE DADOS (PERSISTÊNCIA) ---
+// --- 2. GERENCIAMENTO DE DADOS (PERSISTÊNCIA HÍBRIDA) ---
 
 async function loadContent() {
     contentGrid.innerHTML = '<p style="color:gray; grid-column:1/-1; text-align:center;">Carregando seus projetos...</p>';
     
     try {
+        // AUDITORIA: Carregamento Híbrido
         if (isGuest) {
             const localData = localStorage.getItem('guest_content');
             appData = localData ? JSON.parse(localData) : [];
@@ -136,9 +146,12 @@ async function loadContent() {
 
 async function saveContent() {
     try {
+        // AUDITORIA: Persistência Híbrida confirmada
         if (isGuest) {
+            // Modo Visitante: Salva no LocalStorage
             localStorage.setItem('guest_content', JSON.stringify(appData));
         } else {
+            // Modo Google: Salva na "Nuvem" (Mock Firestore)
             await firestore.saveUserContent(currentUser.uid, appData);
         }
         return true;

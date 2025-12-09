@@ -12,14 +12,18 @@
 
 class MockFirebaseAuth {
     constructor() {
-        // Tenta recuperar usuário salvo da sessão anterior (Simula persistência)
+        // AUDITORIA - PERSISTÊNCIA:
+        // No Firebase real, a persistência é configurada via:
+        // await auth.setPersistence(browserLocalPersistence);
+        // Aqui, simulamos isso recuperando o usuário do localStorage ao iniciar a classe.
         const savedUser = localStorage.getItem('mock_auth_user');
         this.currentUser = savedUser ? JSON.parse(savedUser) : null;
         this.authListener = null;
     }
 
     /**
-     * Simula auth.signInWithPopup(provider)
+     * Simula auth.signInWithGoogle()
+     * Garante que o fluxo use Popup e Persistência Local.
      */
     async signInWithGoogle() {
         return new Promise((resolve) => {
@@ -33,7 +37,10 @@ class MockFirebaseAuth {
                 };
                 
                 this.currentUser = fakeUser;
-                // Salva no localStorage para persistir (Simula "browserLocalPersistence")
+                
+                // AUDITORIA:
+                // Salva no localStorage para garantir que o usuário continue logado
+                // se fechar a aba (Simula browserLocalPersistence).
                 localStorage.setItem('mock_auth_user', JSON.stringify(fakeUser));
                 
                 // Notifica o app que o status mudou
@@ -51,6 +58,7 @@ class MockFirebaseAuth {
         return new Promise((resolve) => {
             setTimeout(() => {
                 this.currentUser = null;
+                // Limpa a persistência local ao sair explicitamente
                 localStorage.removeItem('mock_auth_user');
                 if (this.authListener) this.authListener(null);
                 resolve();
@@ -60,11 +68,11 @@ class MockFirebaseAuth {
 
     /**
      * Simula auth.onAuthStateChanged(callback)
-     * Esta é a "Única Fonte de Verdade" mencionada no seu prompt.
+     * Esta é a "Única Fonte de Verdade" para o estado da sessão.
      */
     onAuthStateChanged(callback) {
         this.authListener = callback;
-        // Chama imediatamente com o estado atual
+        // Chama imediatamente com o estado atual (seja null ou usuário persistido)
         callback(this.currentUser);
     }
 }
